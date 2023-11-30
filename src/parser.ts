@@ -15,7 +15,7 @@ interface BettingRound {
 interface Player {
   name: string;
   stackChange: number;
-  holeCards?: string[];
+  holeCards: string[];
 }
 
 interface GameState {
@@ -40,6 +40,7 @@ function parseLogLine(logLine: string): GameState {
     return {
       name: name,
       stackChange: stackChanges[index],
+      holeCards: []
     };
   });
 
@@ -105,5 +106,4 @@ function parseActions(
 // Test the function with a sample log line
 const sampleLogLine =
   "STATE:995:cc/cc/cr3339f:3dJh|QcJd/8c4d4s/Qs:100|-100:player02-143-discovery|player01-143-discovery";
-const parsedLog = parseLogLine(sampleLogLine);
-console.log(JSON.stringify(parsedLog, null, 2));
+export const gameState = parseLogLine(sampleLogLine);

@@ -1,5 +1,5 @@
 import { Actor, vec } from "excalibur";
-import { Resources } from "./resources";
+import { getCardSprite } from "./sprites";
 
 export class Player extends Actor {
   constructor() {
@@ -11,7 +11,7 @@ export class Player extends Actor {
   }
 
   onInitialize() {
-    this.graphics.add(Resources.Sword.toSprite());
+    this.graphics.add(getCardSprite("A", "c")!);
     this.on('pointerup', () => {
       alert('yo');
     });
