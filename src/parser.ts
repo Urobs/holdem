@@ -1,3 +1,4 @@
+// @ts-ignore
 import log from './logs.log'
 
 type ActionType = "call" | "raise" | "fold";
@@ -110,7 +111,7 @@ function splitIntoStates(logData: string): string[] {
   // 使用正则表达式分割文本，每个STATE:作为新记录的开始
   const stateRegex = /STATE:/g;
   console.log(logData.split(stateRegex))
-  return logData.split(stateRegex).slice(1).map((data, index) => {
+  return logData.split(stateRegex).slice(1).map((data, _) => {
     return 'STATE:' + data;
   });
 }

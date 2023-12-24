@@ -1,4 +1,4 @@
-import { Color, Font, FontUnit, Scene } from "excalibur";
+import { Scene } from "excalibur";
 import { Card } from "./card";
 import { BettingRound, Player, GameState } from "./parser";
 import { Rank, Suit } from "./sprites";
@@ -168,7 +168,7 @@ export class PlayScene extends Scene {
         this.round > 0
           ? this.gameState.communityCards.slice(
               0,
-              round.stage == "flop" ? 2 : (round.stage === "turn" ? 3 : 4)
+              round.stage == "flop" ? 2 : round.stage === "turn" ? 3 : 4
             )
           : [],
     };
@@ -197,7 +197,7 @@ export class PlayScene extends Scene {
     this.addText("回合: " + EN2CN[round.stage], 100, 100);
     this.addText("对局: " + this.gameState.handId, 50, 50);
     round.actions
-      .filter((act, index) => index % 2 === 0)
+      .filter((_act, index) => index % 2 === 0)
       .forEach((act, index) => {
         this.addText(
           `行动${index + 1}：${EN2CN[act.action]} ${act.amount ?? ""}`,
@@ -207,7 +207,7 @@ export class PlayScene extends Scene {
       });
 
     round.actions
-      .filter((act, index) => index % 2 !== 0)
+      .filter((_act, index) => index % 2 !== 0)
       .forEach((act, index) => {
         this.addText(
           `行动${index + 1}：${EN2CN[act.action]} ${act.amount ?? ""}`,
