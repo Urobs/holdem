@@ -34,6 +34,7 @@ class Game extends Engine {
     loader.logo = logo;
     loader.logoHeight = 144;
     loader.logoWidth = 320;
+    loader.backgroundColor = "#006400"
     return this.start(loader);
   }
 }

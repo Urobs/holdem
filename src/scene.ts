@@ -1,4 +1,4 @@
-import { Scene } from "excalibur";
+import { Color, Engine, ExcaliburGraphicsContext, Scene } from "excalibur";
 import { Card } from "./card";
 import { BettingRound, Player, GameState } from "./parser";
 import { Rank, Suit } from "./sprites";
@@ -75,7 +75,7 @@ export class PlayScene extends Scene {
     this.round++;
     this.clear();
     this.getRound();
-    this.setupRound(this.gameState.bettingRounds.length - 1 === this.round);
+    this.setupRound();
   }
 
   public lastRound(): void {
@@ -84,6 +84,9 @@ export class PlayScene extends Scene {
     this.clear();
     this.getRound();
     this.setupRound();
+  }
+  public onInitialize(_engine: Engine): void {
+    _engine.backgroundColor = Color.fromHex("#006400")
   }
 
   public onActivate(): void {
@@ -174,10 +177,11 @@ export class PlayScene extends Scene {
     };
   }
 
-  public setupRound(showChange: boolean = false): void {
+  public setupRound(): void {
     const LEFT = 550;
     const TOP = 200;
     const round = this.getRound();
+    const showChange = this.gameState.bettingRounds.length - 1 === this.round
     round.players.forEach((p, index1) => {
       p.holeCards.map((hc, index2) =>
         this.addCard(hc, LEFT + index2 * 150, TOP + index1 * 450)

@@ -58,7 +58,7 @@ function parseLogLine(logLine: string): GameState {
       index < actionStrings.length
         ? parseActions(actionStrings[index], players)
         : [],
-  }));
+  })).filter(st => st.actions.length > 0);
 
   // 分割出社区牌和手牌的部分
   const communityAndHoleCardsSection = sections[2].split("/");
