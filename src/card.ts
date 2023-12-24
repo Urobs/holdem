@@ -1,14 +1,12 @@
 import { Actor, vec } from "excalibur";
 import { CARD_HEIGHT, CARD_WIDTH, Rank, Suit, getCardSprite } from "./sprites";
 
-const GAP = 150
-const OFFSET = 400
 export class Card extends Actor {
   public rank: Rank;
   public suit: Suit;
-  constructor(rank: Rank, suit: Suit, row: number, column: number, offset=OFFSET) {
+  constructor(rank: Rank, suit: Suit, x: number, y: number) {
     super({
-      pos: vec(offset+ column * GAP,  offset + row * GAP),
+      pos: vec(x,  y),
       width: CARD_WIDTH,
       height: CARD_HEIGHT
     });

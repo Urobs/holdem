@@ -1,24 +1,26 @@
+import log from './logs.log'
+
 type ActionType = "call" | "raise" | "fold";
 type GameStage = "preflop" | "flop" | "turn" | "river";
 
-interface PlayerAction {
+export interface PlayerAction {
   player: string;
   action: ActionType;
   amount?: number;
 }
 
-interface BettingRound {
+export interface BettingRound {
   stage: GameStage;
   actions: PlayerAction[];
 }
 
-interface Player {
+export interface Player {
   name: string;
   stackChange: number;
   holeCards: string[];
 }
 
-interface GameState {
+export interface GameState {
   handId: number;
   bettingRounds: BettingRound[];
   communityCards: string[];
@@ -103,7 +105,19 @@ function parseActions(
   return actions;
 }
 
-// Test the function with a sample log line
-const sampleLogLine =
-  "STATE:995:cc/cc/cr3339f:3dJh|QcJd/8c4d4s/Qs:100|-100:player02-143-discovery|player01-143-discovery";
-export const gameState = parseLogLine(sampleLogLine);
+export const gameStates: GameState[] = parseMultipleLogLines(log);
+function splitIntoStates(logData: string): string[] {
+  // 使用正则表达式分割文本，每个STATE:作为新记录的开始
+  const stateRegex = /STATE:/g;
+  console.log(logData.split(stateRegex))
+  return logData.split(stateRegex).slice(1).map((data, index) => {
+    return 'STATE:' + data;
+  });
+}
+
+function parseMultipleLogLines(logData: string): GameState[] {
+  const states = splitIntoStates(logData);
+  return states.map(state => parseLogLine(state));
+}
+
+console.log(gameStates)

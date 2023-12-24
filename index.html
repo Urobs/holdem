@@ -6,8 +6,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./src/style.css">
     <title>holdem</title>
+    <style type="text/css">
+      #root {
+        /* When this is relative, child elements positioned absolutely will
+           be relative to this element, not the document providing more accurate
+           positioning, since the canvas will be at (0, 0) */
+        position: relative;
+      }
+
+      #root #ui {
+        /* This will make the UI appear on top of the canvas */
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* These are scene-based UI styles */
+      #ui.MainMenu .button.button--start {
+        position: absolute;
+        bottom: 10%;
+        right: 25%;
+        background: green;
+        color: white;
+      }
+      /* These are scene-based UI styles */
+      #ui.MainMenu .button.button--last {
+        position: absolute;
+        bottom: 10%;
+        left: 25%;
+        background: red;
+        color: white;
+      }
+
+      #ui.MainMenu .button.button--startb {
+        position: absolute;
+        top: 5%;
+        right: 25%;
+        background: green;
+        font-size: 30px;
+        color: white;
+      }
+      /* These are scene-based UI styles */
+      #ui.MainMenu .button.button--lastb {
+        position: absolute;
+        top: 5%;
+        left: 25%;
+        font-size: 30px;
+        background: red;
+        color: white;
+      }
+    </style>
   </head>
   <body>
+    <div id="root">
+      <!-- Provide your own canvas to Excalibur -->
+      <canvas id="game"></canvas>
+
+      <!-- The UI will automatically be drawn above the game due to z-indexing -->
+      <div id="ui">
+        <!-- This is where your game UI will go, dynamically created per scene -->
+      </div>
+    </div>
     <script type="module" src="./src/main.ts"></script>
   </body>
 </html>
