@@ -1,6 +1,6 @@
-import { Scene } from "excalibur";
+import { Scene, SceneActivationContext } from "excalibur";
 import { Card } from "./card";
-import { BettingRound, Player, GameState } from "./parser";
+import { BettingRound, Player, GameState, parseMultipleLogLines } from "./parser";
 import { Rank, Suit } from "./sprites";
 import { Text } from "./text";
 
@@ -38,12 +38,11 @@ const EN2CN = {
 
 export class PlayScene extends Scene {
   private round: number = 0;
-  private gameStates: GameState[];
+  private gameStates: GameState[] = [];
   private tick: number = 0;
 
-  constructor(gs: GameState[]) {
+  constructor() {
     super();
-    this.gameStates = gs;
   }
 
   get gameState(): GameState {
@@ -86,7 +85,8 @@ export class PlayScene extends Scene {
     this.setupRound();
   }
 
-  public onActivate(): void {
+  public onActivate(data: SceneActivationContext<string>) {
+    this.gameStates = parseMultipleLogLines(data.data!) as GameState[]
     this.setupRound();
     // Add a CSS class to `ui` that helps indicate which scene is being displayed
     ui.classList.add("MainMenu");

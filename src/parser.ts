@@ -1,5 +1,4 @@
 // @ts-ignore
-import log from './logs.log'
 
 type ActionType = "call" | "raise" | "fold";
 type GameStage = "preflop" | "flop" | "turn" | "river";
@@ -106,7 +105,6 @@ function parseActions(
   return actions;
 }
 
-export const gameStates: GameState[] = parseMultipleLogLines(log);
 function splitIntoStates(logData: string): string[] {
   // 使用正则表达式分割文本，每个STATE:作为新记录的开始
   const stateRegex = /STATE:/g;
@@ -115,10 +113,7 @@ function splitIntoStates(logData: string): string[] {
     return 'STATE:' + data;
   });
 }
-
-function parseMultipleLogLines(logData: string): GameState[] {
+export function parseMultipleLogLines(logData: string): GameState[] {
   const states = splitIntoStates(logData);
   return states.map(state => parseLogLine(state));
 }
-
-console.log(gameStates)

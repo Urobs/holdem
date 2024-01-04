@@ -1,8 +1,8 @@
-import { Engine, Loader, DisplayMode, PointerScope } from "excalibur";
+import { Engine, Loader, DisplayMode, PointerScope, Color } from "excalibur";
 import { Resources } from "./resources";
 import logo from "./images/Top-Down/Chips/ChipsA_Flat-64x72.png";
 import { PlayScene } from "./scene";
-import { gameStates } from "./parser";
+import { LoginScene } from "./loginScene";
 
 class Game extends Engine {
   constructor() {
@@ -22,9 +22,13 @@ class Game extends Engine {
     });
   }
   initialize() {
-    this.addScene("playLevel", new PlayScene(gameStates));
+    this.addScene("playLevel", new PlayScene());
+    this.addScene("login", new LoginScene((data: any) => {
+      this.goToScene("playLevel", data);
+    }))
+    this.backgroundColor = Color.fromHex("#006400");
     this.startCustomLoader().then(() => {
-      this.goToScene("playLevel");
+      this.goToScene("login");
     });
   }
 
@@ -34,6 +38,8 @@ class Game extends Engine {
     loader.logo = logo;
     loader.logoHeight = 144;
     loader.logoWidth = 320;
+    loader.backgroundColor = "#006400";
+
     return this.start(loader);
   }
 }
