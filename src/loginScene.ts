@@ -1,5 +1,6 @@
 import { Scene } from "excalibur";
 import { v4 as uuidv4 } from 'uuid';
+import { GameState, parseMultipleLogLines } from "./parser";
 
 interface LoginResponse {
   id:string
@@ -20,6 +21,7 @@ interface LogResponse {
       task_id: string
       log_content: string
     }
+    settings?: number[]
   }
 }
 
@@ -62,7 +64,7 @@ export class LoginScene extends Scene {
     return res.json()
   }
 
-  public async getlog(): Promise<string|null> {
+  public async getlog(): Promise<GameState[]|null> {
     const currentUrl = window.location.href;
 
     // 解析查询字符串
@@ -96,7 +98,7 @@ export class LoginScene extends Scene {
     if (logres.result.code !== 0 || !logres.result.log_info) {
       return null
     }
-    return logres.result.log_info.log_content
+    return parseMultipleLogLines(logres.result.log_info.log_content, logres.result.settings)
   }
 
   public onDeactivate(): void {

@@ -27,7 +27,7 @@ export interface GameState {
   players: Player[];
 }
 
-function parseLogLine(logLine: string): GameState {
+function parseLogLine(logLine: string, settings: number[]): GameState {
   const sections = logLine.replace("STATE", "").split(":").slice(1);
 
   const resultSection = sections[3];
@@ -55,7 +55,7 @@ function parseLogLine(logLine: string): GameState {
     stage: stage,
     actions:
       index < actionStrings.length
-        ? parseActions(actionStrings[index], players)
+        ? parseActions(actionStrings[index], players, settings[index] - 1)
         : [],
   }));
 
@@ -86,7 +86,8 @@ function parseLogLine(logLine: string): GameState {
 
 function parseActions(
   actionSubString: string,
-  players: Player[]
+  players: Player[],
+  offset = 1 | 0 // 表示从大盲还是小盲开始下注, 1表示大盲 0代表小盲
 ): PlayerAction[] {
   const actions: PlayerAction[] = [];
   let matches;
@@ -96,7 +97,7 @@ function parseActions(
   while ((matches = actionRegex.exec(actionSubString)) !== null) {
     const [, action, amount] = matches;
     actions.push({
-      player: players[actions.length % 2].name,
+      player: players[(actions.length + offset) % 2].name,
       action: action === "c" ? "call" : action === "r" ? "raise" : "fold",
       amount: amount ? parseInt(amount) : undefined,
     });
@@ -113,7 +114,7 @@ function splitIntoStates(logData: string): string[] {
     return 'STATE:' + data;
   });
 }
-export function parseMultipleLogLines(logData: string): GameState[] {
+export function parseMultipleLogLines(logData: string, settings = [1, 2, 2, 2]): GameState[] {
   const states = splitIntoStates(logData);
-  return states.map(state => parseLogLine(state));
+  return states.map(state => parseLogLine(state, settings));
 }
