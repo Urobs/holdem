@@ -1,4 +1,4 @@
-import { Color, Engine, ExcaliburGraphicsContext, Scene } from "excalibur";
+import { Scene, SceneActivationContext } from "excalibur";
 import { Card } from "./card";
 import { BettingRound, Player, GameState } from "./parser";
 import { Rank, Suit } from "./sprites";
@@ -38,12 +38,11 @@ const EN2CN = {
 
 export class PlayScene extends Scene {
   private round: number = 0;
-  private gameStates: GameState[];
+  private gameStates: GameState[] = [];
   private tick: number = 0;
 
-  constructor(gs: GameState[]) {
+  constructor() {
     super();
-    this.gameStates = gs;
   }
 
   get gameState(): GameState {
@@ -89,7 +88,8 @@ export class PlayScene extends Scene {
     _engine.backgroundColor = Color.fromHex("#006400")
   }
 
-  public onActivate(): void {
+  public onActivate(data: SceneActivationContext<GameState[]>) {
+    this.gameStates = data.data!
     this.setupRound();
     // Add a CSS class to `ui` that helps indicate which scene is being displayed
     ui.classList.add("MainMenu");
@@ -193,32 +193,23 @@ export class PlayScene extends Scene {
           LEFT + 350,
           TOP + 60 + index1 * 450
         );
+        round.actions
+          .filter((_act) => _act.player === p.name)
+          .forEach((act, index) => {
+            this.addText(
+              `行动${index + 1}：${EN2CN[act.action]} ${act.amount ?? ""}`,
+              LEFT - 400,
+              TOP + 50 + index1 * 450 + 25 * index
+            );
+          });
     }, this);
     round.communityCards.forEach(
       (card, index) => this.addCard(card, LEFT + index * 150, 425),
       this
     );
+
     this.addText("回合: " + EN2CN[round.stage], 100, 100);
     this.addText("对局: " + this.gameState.handId, 50, 50);
-    round.actions
-      .filter((_act, index) => index % 2 === 0)
-      .forEach((act, index) => {
-        this.addText(
-          `行动${index + 1}：${EN2CN[act.action]} ${act.amount ?? ""}`,
-          LEFT - 400,
-          TOP + 50 + 25 * index
-        );
-      });
-
-    round.actions
-      .filter((_act, index) => index % 2 !== 0)
-      .forEach((act, index) => {
-        this.addText(
-          `行动${index + 1}：${EN2CN[act.action]} ${act.amount ?? ""}`,
-          LEFT - 400,
-          TOP + 50 + 450 + 25 * index
-        );
-      });
   }
 
   public onDeactivate(): void {
